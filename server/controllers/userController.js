@@ -1,5 +1,5 @@
-import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import Car from "../models/Car.js";
 
@@ -9,7 +9,7 @@ const generateToken = (userId) => {
   return jwt.sign(payload, process.env.JWT_SECRET);
 };
 
-// Register USer
+// Register User
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -71,6 +71,6 @@ export const getCars = async (req, res) => {
     res.json({ success: true, cars });
   } catch (error) {
     console.log(error.message);
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message });
   }
 };

@@ -59,7 +59,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setToken(token);
-    fetchCars;
+    fetchCars();
   }, []);
 
   // useEffect to fetch user data when token is available
@@ -68,7 +68,7 @@ export const AppProvider = ({ children }) => {
       axios.defaults.headers.common["Authorization"] = `${token}`;
       fetchUser();
     }
-  });
+  },[token]);
 
   const value = {
     navigate,

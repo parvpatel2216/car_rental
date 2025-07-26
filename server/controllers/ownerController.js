@@ -1,4 +1,4 @@
-import imagekit from "../config/imageKit.js";
+import imagekit from "../configs/imageKit.js";
 import Booking from "../models/Booking.js";
 import Car from "../models/Car.js";
 import User from "../models/User.js";
@@ -8,7 +8,7 @@ import fs from "fs";
 export const changeRoleToOwner = async (req, res) => {
   try {
     const { _id } = req.user;
-    await User.findByIdAndDelete(_id, { role: "owner" });
+    await User.findByIdAndUpdate(_id, { role: "owner" });
     res.json({ success: true, message: "Now you can list cars" });
   } catch (error) {
     console.log(error.message);
@@ -17,14 +17,13 @@ export const changeRoleToOwner = async (req, res) => {
 };
 
 // API to List Car
-
 export const addCar = async (req, res) => {
   try {
     const { _id } = req.user;
     let car = JSON.parse(req.body.carData);
     const imageFile = req.file;
 
-    // Upload Image to  ImageKit
+    // Upload Image to ImageKit
     const fileBuffer = fs.readFileSync(imageFile.path);
     const response = await imagekit.upload({
       file: fileBuffer,
@@ -37,8 +36,8 @@ export const addCar = async (req, res) => {
       path: response.filePath,
       transformation: [
         { width: "1280" }, // Width resizing
-        { quality: "auto" }, // Auto compression
-        { format: "webp" }, // Convert to modern format
+        { quality: "auto" }, //Auto compression
+        { format: "webp" }, //Convert to modern format
       ],
     });
 
@@ -52,7 +51,7 @@ export const addCar = async (req, res) => {
   }
 };
 
-// API to List Owner Cars
+// API to list Owner Cars
 export const getOwnerCars = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -86,7 +85,7 @@ export const toggleCarAvailability = async (req, res) => {
   }
 };
 
-// Api to delete a car
+// APPI to delete a car
 export const deleteCar = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -100,6 +99,7 @@ export const deleteCar = async (req, res) => {
 
     car.owner = null;
     car.isAvailable = false;
+
     await car.save();
 
     res.json({ success: true, message: "Car Removed" });
@@ -109,7 +109,7 @@ export const deleteCar = async (req, res) => {
   }
 };
 
-// API to get Dashboard Data
+// API to get Dashboard data
 export const getDashboardData = async (req, res) => {
   try {
     const { _id, role } = req.user;
@@ -132,22 +132,22 @@ export const getDashboardData = async (req, res) => {
       status: "confirmed",
     });
 
-    // Calculate monthlyRevenue from bookings where status is confirmed
-    const monthlyRevenue = bookings
+    // Calculate monthlyRevanue from bookings where status is confirmed
+    const monthlyRevanue = bookings
       .slice()
       .filter((booking) => booking.status === "confirmed")
       .reduce((acc, booking) => acc + booking.price, 0);
 
-    const DashboardData = {
+    const dashboardData = {
       totalCars: cars.length,
       totalBookings: bookings.length,
       pendingBookings: pendingBookings.length,
       completedBookings: completedBookings.length,
       recentBookings: bookings.slice(0, 3),
-      monthlyRevenue,
+      monthlyRevanue,
     };
 
-    res.json({ success: true, DashboardData });
+    res.json({ success: true, dashboardData });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
@@ -159,10 +159,9 @@ export const getDashboardData = async (req, res) => {
 export const updateUserImage = async (req, res) => {
   try {
     const { _id } = req.user;
-
     const imageFile = req.file;
 
-    // Upload Image to  ImageKit
+    // Upload Image to ImageKit
     const fileBuffer = fs.readFileSync(imageFile.path);
     const response = await imagekit.upload({
       file: fileBuffer,
@@ -175,8 +174,8 @@ export const updateUserImage = async (req, res) => {
       path: response.filePath,
       transformation: [
         { width: "400" }, // Width resizing
-        { quality: "auto" }, // Auto compression
-        { format: "webp" }, // Convert to modern format
+        { quality: "auto" }, //Auto compression
+        { format: "webp" }, //Convert to modern format
       ],
     });
 

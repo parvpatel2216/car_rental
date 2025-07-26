@@ -1,7 +1,7 @@
 import Booking from "../models/Booking.js";
 import Car from "../models/Car.js";
 
-// Function to check Availability of Car for a given Date
+// Function to check availability of car for a given date
 const checkAvailability = async (car, pickupDate, returnDate) => {
   const bookings = await Booking.find({
     car,
@@ -11,15 +11,15 @@ const checkAvailability = async (car, pickupDate, returnDate) => {
   return bookings.length === 0;
 };
 
-// API to Check Availability of Cars for the given Date and location
+// API to check availability of cars for the given Date and location
 export const checkAvailabilityOfCar = async (req, res) => {
   try {
     const { location, pickupDate, returnDate } = req.body;
 
     // fetch all available cars for the given location
-    const cars = await Car.find({ location, isAvalible: true });
+    const cars = await Car.find({ location, isAvailable: true });
 
-    // check car availability for the given date range using promise
+    // Check car availablility for the given data rangw using promise
     const availableCarsPromises = cars.map(async (car) => {
       const isAvailable = await checkAvailability(
         car._id,
@@ -55,7 +55,7 @@ export const createBooking = async (req, res) => {
     // Calculate price based on pickupDate and returnDate
     const picked = new Date(pickupDate);
     const returned = new Date(returnDate);
-    const noOfDays = Math.ceil((returnDate - picked) / (1000 * 60 * 60 * 24));
+    const noOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24));
     const price = carData.pricePerDay * noOfDays;
 
     await Booking.create({
@@ -74,7 +74,7 @@ export const createBooking = async (req, res) => {
   }
 };
 
-// API to List User Bookings
+// API to list User Booking
 export const getUserBookings = async (req, res) => {
   try {
     const { _id } = req.user;
@@ -89,7 +89,6 @@ export const getUserBookings = async (req, res) => {
 };
 
 // API to get Owner Bookings
-
 export const getOwnerBookings = async (req, res) => {
   try {
     if (req.user.role !== "owner") {
