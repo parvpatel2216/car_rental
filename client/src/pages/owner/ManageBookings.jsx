@@ -4,7 +4,7 @@ import { useAppcontext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 const ManageBookings = () => {
-  const { currency, axios } = useAppcontext;
+  const { currency, axios } = useAppcontext();
   const [bookings, setBookings] = useState([]);
 
   const fetchOwnerBookings = async () => {

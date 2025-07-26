@@ -5,7 +5,7 @@ import { useAppcontext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 const ManageCars = () => {
-  const { isOwner, axios, currency } = useAppcontext;
+  const { isOwner, axios, currency, fetchCars } = useAppcontext();
   const [cars, setCars] = useState([]);
 
   const fetchOwnerCars = async () => {
@@ -27,6 +27,7 @@ const ManageCars = () => {
       if (data.success) {
         toast.success(data.message);
         fetchOwnerCars();
+        fetchCars();
       } else {
         toast.error(data.message);
       }
@@ -47,6 +48,7 @@ const ManageCars = () => {
       if (data.success) {
         toast.success(data.message);
         fetchOwnerCars();
+        fetchCars();
       } else {
         toast.error(data.message);
       }
@@ -104,25 +106,26 @@ const ManageCars = () => {
                 <td className="p-3 max-md:hidden">
                   <span
                     className={`px-3 py-1 rounded-full text-xs ${
-                      car.isAvaliable
+                      car.isAvailable
                         ? "bg-green-100 text-green-500"
                         : "bg-red-100 text-red-500"
                     }`}
                   >
-                    {car.isAvaliable ? "Available" : "Unavailable"}
+                    {car.isAvailable ? "Available" : "Unavailable"}
                   </span>
                 </td>
 
                 <td className="flex items-center p-3">
-                  <img onClick={()=>toggleAvailability(car._id)}
+                  <img
+                    onClick={() => toggleAvailability(car._id)}
                     src={
-                      car.isAvaliable ? assets.eye_close_icon : assets.eye_icon
+                      car.isAvailable ? assets.eye_close_icon : assets.eye_icon
                     }
                     alt=""
                     className="cursor-pointer"
                   />
                   <img
-                  onClick={()=> deleteCar(car._id)}
+                    onClick={() => deleteCar(car._id)}
                     src={assets.delete_icon}
                     alt=""
                     className="cursor-pointer"
